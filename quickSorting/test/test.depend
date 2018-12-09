@@ -1,0 +1,8 @@
+# depslib dependency file v1.0
+1544245970 source:/home/snake/allRepository/quickSorting/test/main.cpp
+	<iostream>
+	<Log.h>
+	<cstring>
+	<string>
+	<Sorting.h>
+
