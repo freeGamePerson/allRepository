@@ -6,9 +6,10 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/socket.h>
-
+#include <vector>
 #include <netinet/in.h>
-
+#include <Login.h>
+#include <arpa/inet.h>
 #define MAXLINIE 4096
 using namespace std;
 
@@ -59,10 +60,29 @@ int main()
 
         exit(0);
     }
-
-   
+	struct sockaddr *  clientaddr;
+	socklen_t len = sizeof(clientaddr);	
+    vector<ServiceLoginHandler> handler;
     while(true)
     {
+		connfd =accept(listenfd,(struct sockaddr *)&clientaddr , &len);
+		if(connfd == -1)
+		{
+			errcode = strerror(errno);
+			string msg = "accept socket error:" + errcode + to_string(errno);
+			log("连接失败"+ msg);
+			continue;
+		}
+		
+		sockaddr_in sin;
+		memcpy(&sin,&clientaddr,sizeof(sin));
+		string addr = inet_ntoa(sin.sin_addr);
+	
+		log("连接成功"+addr);
+		
+		//ServiceLoginHandler service(connect);
+		//handler.push_back( service );
+		
         //log("waiting connect");        
     }
     close(listenfd);
