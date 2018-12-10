@@ -12,10 +12,31 @@
 #include <arpa/inet.h>
 #define MAXLINIE 4096
 using namespace std;
-
+#define MAXCONNECT 10
 void log(string msg)
 {
     cout << msg <<endl;
+}
+void printVector(vector<ServiceLoginHandler * > vec)
+{
+    if(vec.empty())
+    {
+
+        log("vec is null");
+        return;
+    }
+
+    //创建一个vector 迭代器
+    
+    vector<ServiceLoginHandler * >::iterator it;
+
+
+    for(it = vec.begin(); it !=vec.end();it++)
+    {
+        cout << (*it)->socket;
+    }
+
+    cout <<endl;
 }
 
 int main()
@@ -62,7 +83,7 @@ int main()
     }
 	struct sockaddr *  clientaddr;
 	socklen_t len = sizeof(clientaddr);	
-    vector<ServiceLoginHandler> handler;
+    vector<ServiceLoginHandler * > handler;
     while(true)
     {
 		connfd =accept(listenfd,(struct sockaddr *)&clientaddr , &len);
@@ -77,12 +98,12 @@ int main()
 		sockaddr_in sin;
 		memcpy(&sin,&clientaddr,sizeof(sin));
 		string addr = inet_ntoa(sin.sin_addr);
-	
+        	
 		log("连接成功"+addr);
-		
-		//ServiceLoginHandler service(connect);
-		//handler.push_back( service );
-		
+	    cout << connfd <<endl;	
+		ServiceLoginHandler * service = new ServiceLoginHandler(connfd);
+		handler.push_back(service);
+        printVector(handler);		
         //log("waiting connect");        
     }
     close(listenfd);
